@@ -50,6 +50,13 @@ def send_data(format, encrypt=False):
 
 
 if __name__ == '__main__':
+    # Select which data type to be sent to the server
+    # Options: json, xml, binary, txt
     format = 'binary'
+
+    # Select if the data is to be encrypted
+    # Options: True, False
     encrypt = False
+
+    # Call the main script
     send_data(format, encrypt)
