@@ -1,5 +1,9 @@
 # client-server-network
-Group Project to build a client / server network.
+This is a Python package to build a client / server network using the `socket` library.
+
+The client provides different data options to send to the server with the option to encrypt the data using symmetric encryption.
+
+This package is written using PEP 8 guidelines.
 
 ## Table of Contents
 
