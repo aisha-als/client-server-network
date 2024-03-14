@@ -21,9 +21,7 @@ for ip in sample_input:
 
 # Close the file
 sys.stdout.close()
+# output.txt is now stored as a new text file
 # Restore sys.stdout to our old saved file handler
 sys.stdout = stdout_fileno
 
-
-my_file = open("output.txt", "r")
-print(my_file.read())
