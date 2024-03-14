@@ -20,6 +20,9 @@ def symmetric_encryption(file):
     print("Unencrypted file: ", file)
     print("Encrypted file: ", encrypted_txt)
 
+    # Return the encrypted text
+    return encrypted_txt
+
 
 if __name__ == '__main__':
     txt_file = open_file()
