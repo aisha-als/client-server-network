@@ -1,0 +1,6 @@
+cffi==1.16.0
+cryptography==42.0.5
+dicttoxml==1.7.16
+pycparser==2.21
+setuptools==68.2.2
+wheel==0.41.2
