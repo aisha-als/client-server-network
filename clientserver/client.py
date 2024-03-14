@@ -11,7 +11,6 @@ PORT = 6666
 def data_types(dictionary, format):
     if format == 'json':
         data = data_formats.dict_to_json(student_names).encode()
-        print(data)
     elif format == 'xml':
         data = data_formats.dict_to_xml(dictionary)
     elif format == 'binary':
@@ -44,10 +43,13 @@ def send_data(format, encrypt=False):
 
     # Decodes data by converting bytes to string then printing
     # (needs adjusting for other file types e.g. JSON, binary etc)
-    print(f"Server has recieved data. Copy of data recieved: {data.decode()}")
+    if format == 'binary':
+        print(f"Server has recieved data. Copy of data recieved: {data}")
+    else:
+        print(f"Server has recieved data. Copy of data recieved: {data.decode()}")
 
 
 if __name__ == '__main__':
-    format = 'txt'
-    encrypt = True
+    format = 'binary'
+    encrypt = False
     send_data(format, encrypt)
