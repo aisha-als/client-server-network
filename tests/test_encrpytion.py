@@ -1,53 +1,29 @@
 import pytest
-from Cryptodome.Cipher import AES
-from Cryptodome.Random import get_random_bytes
-from Cryptodome.Util.Padding import pad, unpad  
+from cryptography.fernet import Fernet
+from encryption import symmetric_encryption
 
-# --- Encryption/Decryption Functions ---
-def encrypt_file(file_name, key):
-    with open(file_name, 'rb') as f:
-        data = f.read()
+# Test Data
+original_message = "This is a secret message."
 
-    iv = get_random_bytes(16)  # Generate a random initialization vector
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    ciphertext = iv + cipher.encrypt(pad(data, AES.block_size))
+# Test: Encryption and Decryption
+def test_encrypt_decrypt():
+    key = Fernet.generate_key()  
+    fernet = Fernet(key)
 
-    with open(file_name + ".enc", 'wb') as f:  # Store encrypted data
-        f.write(ciphertext)
+    encrypted_message = symmetric_encryption(original_message, key)
+    assert encrypted_message != original_message  # Basic check that it's changed
 
-def decrypt_file(encrypted_file_name, key):
-    with open(encrypted_file_name, 'rb') as f:
-        data = f.read()
+    decrypted_message = fernet.decrypt(encrypted_message.encode()).decode()
+    assert original_message == decrypted_message
 
-    iv = data[:16]  # Extract IV from the beginning 
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    plaintext = unpad(cipher.decrypt(data[16:]), AES.block_size)
-
-    with open(encrypted_file_name[:-4], 'wb') as f:  # Decrypted output
-        f.write(plaintext)
-
-# --- Encryption Tests ---
-def test_encrypt_decrypt_text_file():
-    file_name = "test_file.txt"
-    key = get_random_bytes(16)  
-
-    encrypt_file(file_name, key)
-    decrypt_file(file_name + ".enc", key)  
-
-    with open(file_name, "r") as f:
-        original_content = f.read()
-
-    with open("decrypted_file.txt", "r") as f:
-        decrypted_content = f.read()
-
-    assert original_content == decrypted_content  
-
+# Test: Invalid Key for Decryption (If applicable to your code)  
 def test_decrypt_invalid_key():
-    file_name = "test_file.txt"
-    original_key = get_random_bytes(16)
-    wrong_key = get_random_bytes(16)
+    # ... Generate encryption using a valid key
 
-    encrypt_file(file_name, original_key) 
+    wrong_key = Fernet.generate_key()
+
+    with pytest.raises(cryptography.fernet.InvalidToken):
+        # ... Attempt to decrypt the message with the wrong key
 
     with pytest.raises(ValueError):  # Or the specific error the code raises
         decrypt_file(file_name + ".enc", wrong_key) 
