@@ -24,6 +24,24 @@ def symmetric_encryption(file):
     return encrypted_txt
 
 
+def symmetric_decryption(file):
+    # Use the same key as the encryption
+    key = Fernet.generate_key()
+    fernet = Fernet(key)
+    # Instance the Fernet class with the key
+    fernet = Fernet(key)
+
+    # decrypt the encrypted string with the
+    # Fernet instance of the key,
+    # that was used for encrypting the string
+    # encoded byte string is returned by decrypt method,
+    # so decode it to string with decode methods
+    decrypted_txt = fernet.decrypt(file).decode()
+
+    print("decrypted string: ", decrypted_txt)
+    return decrypted_txt
+
+
 if __name__ == '__main__':
     txt_file = open_file()
     symmetric_encryption(txt_file)
