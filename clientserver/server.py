@@ -1,6 +1,6 @@
 import socket
 import sys
-import decrypt
+import encryption
 import file_printer
 
 # Define host and port - local host uses local IP of computer
@@ -29,18 +29,15 @@ def receive_data(print_to_file=False, decryption=False):
 
             # Receives data from client side - 1024 represents max number of bytes that can be recieved at once
             while True:
-                data = connection.recv(1024)[0]
-                key = connection.recv(1024)[1]
-                if decryption:
-                    decrypt.symmetric_decryption(data, key)
-
+                data = connection.recv(1024)
+                
                 # If data recieved is empty, then will break loop
                 if not data:
                     break
 
                 # Decrypt if decryption is required
                 if decryption:
-                    data = decrypt.symmetric_decryption(data, key)
+                    data = encryption.symmetric_decryption(data)
                 # Decodes data by converting bytes to string then printing
                 # (needs adjusting for other file types e.g. JSON, binary etc)
                 print(f"Data recieved: {data.decode()}")
