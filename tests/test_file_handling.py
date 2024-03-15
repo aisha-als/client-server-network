@@ -1,48 +1,25 @@
 import pytest
-import os 
+from encryption import open_file, symmetric_encryption  # Or our actual functions
 
-# --- File Creation Tests --- 
-def test_create_small_text_file():
-    file_name = "test_file.txt"
-    content = "This is a small text file."
-    with open(file_name, "w") as f:
-        f.write(content)
+# Fixtures (optional, but useful for setup)
+@pytest.fixture
+def sample_file_content():
+    return "This is a sample file to be sent from the client to the server."
 
-    assert os.path.exists(file_name) 
-    os.remove(file_name)  
+@pytest.fixture
+def text_file_path():
+    return "text_data.txt" 
 
-def test_create_large_text_file():
-    file_name = "large_test_file.txt"
-    with open(file_name, 'w') as f:
-        for i in range(10000):  
-            f.write("This is a line in a large file\n")
+# Tests
+def test_open_file(text_file_path, sample_file_content):
+    # 1. If needed, create the "text_data.txt" file with the sample content
 
-    assert os.path.exists(file_name) 
-    os.remove(file_name) 
+    file_content = open_file(text_file_path) 
+    assert file_content == sample_file_content
 
-def test_create_file_invalid_filename():
-    file_name = "test@#$%^&*.txt" 
-    with pytest.raises(OSError): 
-        with open(file_name, "w") as f:
-            pass   
+def test_encryption(sample_file_content):
+    encrypted_content = symmetric_encryption(sample_file_content)
 
-# --- File Sending Tests ---
-def test_send_text_file():
-    file_name = 'test_file.txt'
-    # ... Create the file if it doesn't exist 
-
-    def send_file(file_name):  # Placeholder for your actual sending logic
-        print(f"Sending file: {file_name}")  
-
-    send_file(file_name) 
-    # ... Add assertions to verify success if 'send_file' function gives feedback
-
-# ... Tests for size limits, unsupported types
-
-# --- Encryption Tests (PyCryptodome) ---
-from Cryptodome.Cipher import AES 
-
-def test_encrypt_and_send():
-    file_name = 'test_file.txt'
-
-    # ... (Encryption using PyCryptodome)
+    # Assert that the content is encrypted 
+    assert encrypted_content != sample_file_content  # Very basic check 
+    # ... Add more specific checks if we want
