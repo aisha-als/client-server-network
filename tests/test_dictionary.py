@@ -1,52 +1,62 @@
 import pytest
+import json 
+import xmltodict  # pip install xmltodict - need for test
 import pickle
-import json
-import xmltodict  # If we're testing XML serialisation
 
-# --- Dictionary Creation Tests ---
+from data_formats import dict_to_json, dict_to_xml, dict_to_binary
 
-def test_basic_dictionary_creation():
-    my_dict = {"name": "Alice", "age": 30}
-    assert isinstance(my_dict, dict) 
-    assert my_dict["name"] == "Alice"
-    assert my_dict["age"] == 30
 
-def test_nested_dictionary_creation():
-    my_dict = {"outer": {"inner_key": "value"}}
-    assert isinstance(my_dict['outer'], dict)
-    assert my_dict['outer']['inner_key'] == "value"
+# --- Sample Test Data ---
+simple_dict = {"name": "Edward", "city": "Liverpool"}
 
-def test_mixed_types_dictionary_creation():
-    my_dict = {"str": "hello", "int": 10, "list": [1, 2, 3], "float": 3.14}
-    # ... keep assertions to check if each element is of the expected type ?
-    assert isinstance(my_dict["str"], str)   # Check for string
-    assert isinstance(my_dict["int"], int)   # Check for integer 
-    assert isinstance(my_dict["list"], list)  # Check for list
-    assert isinstance(my_dict["float"], float)  # Check for float 
 
-def test_empty_dictionary_creation():
-    my_dict = {}
-    assert len(my_dict) == 0  
+# --- JSON Tests ---
+def test_dict_to_json_valid():
+    json_data = dict_to_json(simple_dict) 
+    
+    # Check if valid JSON
+    try:
+        json_object = json.loads(json_data)  # Attempt to parse JSON
+        assert isinstance(json_object, dict)  # Should be a dictionary
+    except json.JSONDecodeError:
+        pytest.fail("Generated output is not valid JSON") 
 
-def test_serialization_unsupported_type():
-    class CustomObject: pass
-    my_dict = {"custom": CustomObject()}
 
-    with pytest.raises(TypeError):  # Expect a TypeError for pickling
-        pickle.dumps(my_dict)
+def test_dict_to_json_content():
+    json_data = dict_to_json(simple_dict)
 
-# --- Serialization Tests ---
+     # Check if expected keys and values exist
+    json_object = json.loads(json_data)
+    assert json_object['name'] == "Edward"
+    assert json_object['city'] == "Liverpool"
 
-def test_binary_serialization():
-    my_dict =  {"key1": "value1", "key2": 2}
-    data = pickle.dumps(my_dict) 
-    assert isinstance(data, bytes)  
+# --- XML Tests --- (Similar structure to JSON tests)
+def test_dict_to_xml_valid():
+    xml_data = dict_to_xml(simple_dict)
 
-    # Add a test step for deserialisation on the server-side:
-    # ... (Need the server-side code for this)
+    try:
+        xmltodict.parse(xml_data)  # Attempt to parse as XML
+    except xmltodict.expat.ExpatError:
+        pytest.fail("Generated output is not valid XML")
 
-def test_json_serialization():
-    # ... Similar structure to binary serialization test
+def test_dict_to_xml_content():
+    xml_data = dict_to_xml(simple_dict)
+    xml_dict = xmltodict.parse(xml_data)
 
-def test_xml_serialization():
-    # ... Similar structure, using xmltodict
+    # Assumming typical XML structure 
+    assert xml_dict['root']['name'] == "Edward"
+    assert xml_dict['root']['city'] == "Liverpool"
+
+# --- Binary Tests ---
+def test_dict_to_binary():
+    binary_data = dict_to_binary(simple_dict)
+
+     # Assert that it's a byte string
+    assert isinstance(binary_data, bytes)
+
+    # Deserialization Test (this is one way to check if 'correct')
+    try:
+        recovered_dict = pickle.loads(binary_data)
+        assert recovered_dict == simple_dict 
+    except pickle.UnpicklingError:
+        pytest.fail("Unable to deserialise binary data back to a dictionary")
