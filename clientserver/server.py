@@ -1,5 +1,4 @@
 import socket
-import sys
 import encryption
 import file_printer
 
