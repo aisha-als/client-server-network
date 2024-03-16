@@ -9,7 +9,6 @@ PORT = 6666
 
 
 def receive_data(print_to_file=False, decryption=False):
-
     # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
@@ -40,18 +39,20 @@ def receive_data(print_to_file=False, decryption=False):
                     data = encryption.symmetric_decryption(data)
                 # Decodes data by converting bytes to string then printing
                 # (needs adjusting for other file types e.g. JSON, binary etc)
-                print(f"Data recieved: {data.decode()}")
+                print(f"Data recieved: {data}")
 
                 # Print to file if required
                 if print_to_file:
                     file_printer.writ(data)
 
                 # Sends a copy of the data recieved back to client to confirm its receipt
-                connection.sendall(data)
+                if type(data) is str:
+                    connection.sendall(data.encode())
+                else:
+                    connection.sendall(data)
 
 
 if __name__ == '__main__':
-
     # Select if the data is to be print to file
     # Options: True, False
     print_to_file = True
