@@ -1,7 +1,7 @@
 import pytest
-from encryption import open_file, symmetric_encryption  # Or our actual functions
+from encryption import open_file, symmetric_encryption  
 
-# Fixtures (optional, but useful for setup)
+# Fixtures 
 @pytest.fixture
 def sample_file_content():
     return "This is a sample file to be sent from the client to the server."
@@ -12,7 +12,7 @@ def text_file_path():
 
 # Tests
 def test_open_file(text_file_path, sample_file_content):
-    # 1. If needed, create the "text_data.txt" file with the sample content
+    # 1. Creates the "text_data.txt" file with the sample content
 
     file_content = open_file(text_file_path) 
     assert file_content == sample_file_content
@@ -22,4 +22,3 @@ def test_encryption(sample_file_content):
 
     # Assert that the content is encrypted 
     assert encrypted_content != sample_file_content  # Very basic check 
-    # ... Add more specific checks if we want
