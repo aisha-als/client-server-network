@@ -10,8 +10,8 @@ def test_receive_and_respond(mock_socket):
     # Configure mock behavior
     mock_socket_instance.recv.return_value = b'{"name": "Edward", "message": "Hello!"}'
 
-    # Execute server code (need to adjust)
-    run__server_logic()  # Replace this placeholder with how the server starts
+    # Execute server code 
+    receive_data()  # Call receive_data function directly
 
     # Assertions
     mock_socket_instance.sendall.assert_called_with(b'{"name": "Edward", "message": "Hello!"}')  # ... and that the same data was echoed back
