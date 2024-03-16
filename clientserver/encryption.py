@@ -1,3 +1,9 @@
+""" Encryption
+
+This script uses the Fernet module from the cryptography Python package.
+It is used to generate a symmetric encryption key that can be used to encrypt and decrypt data.
+"""
+
 from cryptography.fernet import Fernet
 
 
@@ -9,6 +15,11 @@ def open_file():
 
 
 def symmetric_encryption(file):
+    """Returns encrypted data after generating a symmetric encryption key using the Fernet module.
+
+    Argument:
+    file - file / data to be encrypted.
+    """
     # Use Fernet to generate an encryption key
     key = Fernet.generate_key()
     fernet = Fernet(key)
