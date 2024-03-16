@@ -20,6 +20,8 @@ def symmetric_encryption(file):
     Argument:
     file - file / data to be encrypted.
     """
+    # Make fernet a global variable to be called in the decryption function
+    global fernet
     # Use Fernet to generate an encryption key
     key = Fernet.generate_key()
     fernet = Fernet(key)
@@ -36,23 +38,19 @@ def symmetric_encryption(file):
 
 
 def symmetric_decryption(file):
-    # Use the same key as the encryption
-    key = Fernet.generate_key()
-    fernet = Fernet(key)
-    # Instance the Fernet class with the key
-    fernet = Fernet(key)
+    """Returns the decrypted data after decrypting it using the symmetric key generated in def symmetric_encryption.
 
-    # decrypt the encrypted string with the
-    # Fernet instance of the key,
-    # that was used for encrypting the string
-    # encoded byte string is returned by decrypt method,
-    # so decode it to string with decode methods
+    Argument:
+    file - file / data to be unencrypted.
+    """
+    # Decrypt the file using the same key used in encryption
     decrypted_txt = fernet.decrypt(file).decode()
 
-    print("decrypted string: ", decrypted_txt)
+    print("Decrypted file: ", decrypted_txt)
     return decrypted_txt
 
 
 if __name__ == '__main__':
     txt_file = open_file()
-    symmetric_encryption(txt_file)
+    encrypted_txt = symmetric_encryption(txt_file)
+    symmetric_decryption(encrypted_txt)
