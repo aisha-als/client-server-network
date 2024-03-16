@@ -17,7 +17,7 @@ def writ(input_data):
 
     for r in input_data:
         # Prints to the redirected stdout (Output.txt)
-        sys.stdout.write(r + '\n')
+        sys.stdout.write(input_data + '\n')
 
     # Close the file
     sys.stdout.close()
