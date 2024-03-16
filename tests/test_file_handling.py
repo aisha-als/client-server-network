@@ -22,4 +22,3 @@ def test_encryption(sample_file_content):
 
     # Assert that the content is encrypted 
     assert encrypted_content != sample_file_content  # Very basic check 
-    # ... Add more specific checks if we want
