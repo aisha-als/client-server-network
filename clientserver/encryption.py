@@ -7,8 +7,10 @@ It is used to generate a symmetric encryption key that can be used to encrypt an
 from cryptography.fernet import Fernet
 
 # Use Fernet to generate an encryption key
-KEY = Fernet.generate_key()
-FERNET = Fernet(KEY)
+key = Fernet.generate_key()
+# Write the key to a local key.key file
+with open("key.key", "wb") as fernet:
+    fernet.write(key)
 
 
 def open_file():
@@ -24,8 +26,11 @@ def symmetric_encryption(file):
     Argument:
     file - file / data to be encrypted.
     """
+    # Load the generated key
+    key = open("key.key", "rb").read()
+    fernet = Fernet(key)
     # Encrypt the .txt file using the generated key
-    encrypted_txt = FERNET.encrypt(file.encode())
+    encrypted_txt = fernet.encrypt(file.encode())
 
     # Print statements to view the unencrypted and encrypted versions
     print("Unencrypted file: ", file)
@@ -39,10 +44,13 @@ def symmetric_decryption(file):
     """Returns the decrypted data after decrypting it using the symmetric key generated in def symmetric_encryption.
 
     Argument:
-    file - file / data to be unencrypted.
+    file - file / data to be decrypted.
     """
+    # Load the generated key
+    key = open("key.key", "rb").read()
+    fernet = Fernet(key)
     # Decrypt the file using the same key used in encryption
-    decrypted_txt = FERNET.decrypt(file).decode()
+    decrypted_txt = fernet.decrypt(file).decode()
 
     print("Decrypted file: ", decrypted_txt)
     return decrypted_txt
