@@ -9,15 +9,16 @@ sample_input = ['Hi', 'all', 'exit']
 
 
 def writ(input_data):
-
     stdout_fileno = sys.stdout
 
     # Redirect sys.stdout to the file
-    sys.stdout = open('output.txt', 'w')
+    sys.stdout = open('output.txt', 'wb')
 
-    for r in input_data:
-        # Prints to the redirected stdout (Output.txt)
-        sys.stdout.write(r)
+    if type(input_data) is bytes:
+        sys.stdout.write(input_data)
+    else:
+        input_data = bytes(input_data, encoding='utf-8')
+        sys.stdout.write(input_data)
 
     # Close the file
     sys.stdout.close()
@@ -30,6 +31,5 @@ def writ(input_data):
 
 
 if __name__ == '__main__':
-
     # Call the main script
     writ(sample_input)
