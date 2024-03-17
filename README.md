@@ -44,7 +44,11 @@ The client sends data to the server in the below formats:
 - Dictionary object - option to send this as JSON, XML or binary
 - .txt file - option to encrypt the file before sending
 
-To select the data type and encryption requirement, edit `clientserver/client.py`:
+The encryption uses the `Fernet` module from the `cryptography` package which uses an AES-128 in CBC mode symmetric 
+encryption key .
+
+To select the data type and encryption requirement, edit `clientserver/client.py` and update the values of `format`
+and `encrypt`:
 ```sh
 if __name__ == '__main__':
     # Select which data type to be sent to the server
@@ -54,6 +58,21 @@ if __name__ == '__main__':
     # Select if the data is to be encrypted
     # Options: True, False
     encrypt = False
+```
+
+
+The server provides an option to save the data received to an output file called `output.txt`.
+
+To select whether to save received data to an output file, edit `clientserver/server.py` and update the value of 
+`print_to_file`:
+```sh
+if __name__ == '__main__':
+    # Select if the data is to be print to file
+    # Options: True, False
+    print_to_file = True
+
+    # Call the main script
+    receive_data(print_to_file)
 ```
 
 ### Unit Tests
