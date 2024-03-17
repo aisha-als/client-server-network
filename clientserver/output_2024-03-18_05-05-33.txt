@@ -1,1 +1,0 @@
-This is a sample file to be sent from the client to the server.
