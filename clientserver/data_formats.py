@@ -21,21 +21,18 @@ student_names = {
 def dict_to_json(dictionary):
     """Returns JSON object from a dictionary object."""
     names_json = json.dumps(dictionary)
-    print(names_json)
     return names_json
 
 
 def dict_to_xml(dictionary):
     """Returns XML object from a dictionary object."""
     names_xml = dicttoxml(dictionary)
-    print(names_xml)
     return names_xml
 
 
 def dict_to_binary(dictionary):
     """Returns binary object from a dictionary object."""
     names_binary = pickle.dumps(dictionary)
-    print(names_binary)
     return names_binary
 
 

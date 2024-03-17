@@ -9,6 +9,12 @@ PORT = 6666
 
 
 def data_types(dictionary, format):
+    """
+    Takes a dictonary and converts to chosen format.
+    Arguments"
+    dictonary - The raw data in a dictionary to format
+    format - The chosen format to convert the dictonary to
+    """
     try:
         if format == 'json':
             data = data_formats.dict_to_json(dictionary).encode()
@@ -27,6 +33,12 @@ def data_types(dictionary, format):
 
 
 def send_data(format, encrypt=False):
+    """
+    Connects to server and sends data.
+    Arguments:
+    format - The chosen format the dictionary was converted to.
+    encrypt - Whether or not to encrypt the file, default = false.
+    """
     try:
         # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
@@ -47,14 +59,19 @@ def send_data(format, encrypt=False):
             # Sends data to server
             client_socket.sendall(data_sent)
 
+            # Inform the user that the data has been sent and waiting for server response
+            print("\nFollowing data has been sent to the server.\n")
+            print(data_sent)
+            print("\nStatus: Waiting for server response...")
+
             # Copy of data that server recieved
             data = client_socket.recv(1024)
 
         # Decodes data by converting bytes to string then printing
         if format == 'binary':
-            print(f"Server has recieved data. Copy of data recieved: {data}")
+            print(f"\nServer has recieved data.\nCopy of data recieved: {data}")
         else:
-            print(f"Server has recieved data. Copy of data recieved: {data.decode()}")
+            print(f"\nServer has recieved data.\nCopy of data recieved: {data.decode()}")
         
         # Program successful, return 0
         return 0
@@ -71,15 +88,41 @@ def send_data(format, encrypt=False):
 
 
 if __name__ == '__main__':
-    # Select which data type to be sent to the server
-    # Options: json, xml, binary, txt
-    format = 'txt'
+    # Data type selection
+    data_type_selection = {
+        '1': 'json',
+        '2': 'xml',
+        '3': 'binary',
+        '4': 'txt',
+    }
 
-    # Select if the data is to be encrypted
-    # Options: True, False
-    encrypt = True
+    while True:
+        data_type_input = input("What data type do you want to send?\n"
+                                "Enter 1 for JSON\n"
+                                "Enter 2 for XML\n"
+                                "Enter 3 for Binary\n"
+                                "Enter 4 for TXT\n"
+                                "Your choice: ")
+        if data_type_input in data_type_selection:
+            format = data_type_selection[data_type_input]
+            break
+        else:
+            print("ERROR: Wrong option selected")
 
-    # Call the main script
+    # Initialize encryption preference to False
+    encrypt = False
+
+    # Encryption preference - only if TXT is selected
+    if format == 'txt':
+        while True:
+            encrypt_input = input("Do you want to encrypt the data? (Enter Y/N): ")
+            if encrypt_input.strip().lower() in ('y', 'n'):
+                encrypt = True if encrypt_input.strip().lower() == 'y' else False
+                break
+            else:
+                print("ERROR: Wrong option selected")
+
+    # Call the main function with the user inputs
     err = send_data(format, encrypt)
     if err != 0:
         print('Program halted because of an error')
