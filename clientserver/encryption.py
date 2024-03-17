@@ -54,7 +54,7 @@ def symmetric_decryption(file):
     try:
         # Decrypt the file using the same key used in encryption
         txt = fernet.decrypt(file).decode()
-        print("Decrypted file: ", txt)
+        # print("Decrypted file: ", txt)
     except:
         # If there are errors decrypting then it means the text in not encrypted. Return the text.
         txt = file
