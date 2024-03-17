@@ -7,7 +7,7 @@ HOST = 'localhost'
 PORT = 6666
 
 
-def receive_data(print_to_file=False, decryption=False):
+def receive_data(print_to_file=False):
     # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
@@ -34,8 +34,8 @@ def receive_data(print_to_file=False, decryption=False):
                     break
 
                 # Decrypt if decryption is required
-                if decryption:
-                    data = encryption.symmetric_decryption(data)
+                data = encryption.symmetric_decryption(data)
+
                 # Decodes data by converting bytes to string then printing
                 # (needs adjusting for other file types e.g. JSON, binary etc.)
                 print(f"Data recieved: {data}")
@@ -56,9 +56,5 @@ if __name__ == '__main__':
     # Options: True, False
     print_to_file = True
 
-    # Select if the data is to be decrypted
-    # Options: True, False
-    decryption = False
-
     # Call the main script
-    receive_data(print_to_file, decryption)
+    receive_data(print_to_file)
