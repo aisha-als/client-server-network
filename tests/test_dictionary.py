@@ -54,7 +54,7 @@ def test_dict_to_binary():
      # Assert that it's a byte string
     assert isinstance(binary_data, bytes)
 
-    # Deserialization Test (this is one way to check if 'correct')
+    # Deserialisation Test 
     try:
         recovered_dict = pickle.loads(binary_data)
         assert recovered_dict == simple_dict 
