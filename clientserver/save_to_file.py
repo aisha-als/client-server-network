@@ -11,8 +11,12 @@ sample_input = ['Hi', 'all', 'exit']
 def writ(input_data):
     stdout_fileno = sys.stdout
 
+    # Generate a unique filename based on the current timestamp
+    # Format: output_YYYY-MM-DD_HH-MM-SS.txt
+    filename = "output_{}.txt".format(datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S"))
+    
     # Redirect sys.stdout to the file
-    sys.stdout = open('output.txt', 'wb')
+    sys.stdout = open(filename, 'wb')
 
     if type(input_data) is bytes:
         sys.stdout.write(input_data)
@@ -27,7 +31,7 @@ def writ(input_data):
     sys.stdout = stdout_fileno
 
     try:
-        my_file = open("output.txt", "r")
+        my_file = open(filename, "r")
         return my_file
     except FileNotFoundError as fnfe:
         print(f"An error occured in the writ function. The file could not be found: {fnfe}")

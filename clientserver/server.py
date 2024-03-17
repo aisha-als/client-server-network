@@ -20,25 +20,25 @@ def receive_data():
     # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
-        while True:
-            try:
-                # Binds server_socket to the host and port defined above
-                server_socket.bind((HOST, PORT))
+        try:
+            # Binds server_socket to the host and port defined above
+            server_socket.bind((HOST, PORT))
 
-                # Starts listening for incoming connections
-                server_socket.listen()
-                print("\n*** Initiating Server ***")
-                print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
+            # Starts listening for incoming connections
+            server_socket.listen()
+            print("\n*** Initiating Server ***")
+            print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
             
-                # Accepts incoming connections
-                connection, address = server_socket.accept()
-            except socket.error as se:
-                print(f"A socket error has occured: {se}")
-                return 1
-            except Exception as e:
-                print(f"An error has occured in the receive_data function: {e}")
-                return 1
+            # Accepts incoming connections
+            connection, address = server_socket.accept()
+        except socket.error as se:
+            print(f"A socket error has occured: {se}")
+            return 1
+        except Exception as e:
+            print(f"An error has occured in the receive_data function: {e}")
+            return 1
 
+        while True:
             with connection:
                 print(f"Server connected to {address}")
 
@@ -74,8 +74,8 @@ def receive_data():
                             break
                         else: break
                     elif output_choice.strip().lower() == 'save':
-                        save_to_file.writ(data)
-                        print("Data has been saved to output.txt. Please check the file.")
+                        filename=save_to_file.writ(data)
+                        print("Data has been saved to ",filename,". Please check the file.")
                         break
                     else:
                         print("Invalid input. Please enter 'Print' or 'Save'.")
@@ -91,6 +91,9 @@ def receive_data():
             while True:
                 user_input = input("\n Do you want to keep the server running? (Y/N): ")
                 if user_input.strip().lower() == 'y':
+                    print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
+                    # Accepts incoming connections
+                    connection, address = server_socket.accept()
                     break  # Continue the outer while loop
                 elif user_input.strip().lower() == 'n':
                     print("\n*** Server stopped ***\n")
