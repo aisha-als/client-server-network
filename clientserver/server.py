@@ -65,7 +65,7 @@ def receive_data(print_to_file=False):
                     connection.sendall(data.encode())
                 else:
                     connection.sendall(data)
-
+    return 0
 
 if __name__ == '__main__':
     # Select if the data is to be print to file
