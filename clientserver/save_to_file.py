@@ -35,6 +35,7 @@ def writ(input_data):
         print(f"An error occured in the writ function: {e}")
         return 1
 
+
 if __name__ == '__main__':
     # Call the main script
     writ(sample_input)

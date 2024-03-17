@@ -27,6 +27,7 @@ def open_file():
         print(f"An error occured in the open_file function: {e}")
         return 1
 
+
 def symmetric_encryption(file):
     """Returns encrypted data after generating a symmetric encryption key using the Fernet module.
 
@@ -46,7 +47,6 @@ def symmetric_encryption(file):
     except Exception as e:
         print(f"An error occured in the symmetric_encryption function. File could not be encyrpted: {e}")
         return 1
-
 
     # Print statements to view the unencrypted and encrypted versions
     print("Unencrypted file: ", file)
@@ -70,7 +70,6 @@ def symmetric_decryption(file):
         return 1
 
     fernet = Fernet(key)
-    
 
     # try statement to check if the text is encrypted
     try:

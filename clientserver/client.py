@@ -12,8 +12,8 @@ def data_types(dictionary, format):
     """
     Takes a dictonary and converts to chosen format.
 
-    Arguments"
-    dictonary - The raw data in a dictionary to format
+    Arguments:
+    dictionary - The raw data in a dictionary format
     format - The chosen format to convert the dictonary to
     """
     try:

@@ -48,7 +48,8 @@ def receive_data(print_to_file=False):
                 # Run decryption which will check if the text is encrypted or not and if so, decrypt it
                 data = encryption.symmetric_decryption(data)
 
-                #Checks to see if data is an interger (If it is an interger then it means symmetric_decryption function has failed)
+                # Checks to see if data is an integer (If it is an integer then it means symmetric_decryption
+                # function has failed)
                 if type(data) is int and data == 1:
                     return data
 
@@ -66,6 +67,7 @@ def receive_data(print_to_file=False):
                 else:
                     connection.sendall(data)
     return 0
+
 
 if __name__ == '__main__':
     # Select if the data is to be print to file
