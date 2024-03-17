@@ -24,7 +24,6 @@ def data_types(dictionary, format):
     except Exception as e:
         print(f"An error in data_types function has occured: {e}")
         return None
-        
 
 
 def send_data(format, encrypt=False):
@@ -37,7 +36,7 @@ def send_data(format, encrypt=False):
 
             # Calling the data_types function in this script to choose the data type
             data_sent = data_types(student_names, format)
-            if data_sent == None:
+            if data_sent is None:
                 return 1
 
             # If encryption is required
@@ -52,7 +51,6 @@ def send_data(format, encrypt=False):
             data = client_socket.recv(1024)
 
         # Decodes data by converting bytes to string then printing
-        # (needs adjusting for other file types e.g. JSON, binary etc)
         if format == 'binary':
             print(f"Server has recieved data. Copy of data recieved: {data}")
         else:
@@ -75,7 +73,7 @@ def send_data(format, encrypt=False):
 if __name__ == '__main__':
     # Select which data type to be sent to the server
     # Options: json, xml, binary, txt
-    format = 'binary'
+    format = 'json'
 
     # Select if the data is to be encrypted
     # Options: True, False

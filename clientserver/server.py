@@ -1,6 +1,6 @@
 import socket
 import encryption
-import file_printer
+import save_to_file
 
 # Define host and port - local host uses local IP of computer
 HOST = 'localhost'
@@ -37,12 +37,12 @@ def receive_data(print_to_file=False, decryption=False):
                 if decryption:
                     data = encryption.symmetric_decryption(data)
                 # Decodes data by converting bytes to string then printing
-                # (needs adjusting for other file types e.g. JSON, binary etc)
+                # (needs adjusting for other file types e.g. JSON, binary etc.)
                 print(f"Data recieved: {data}")
 
                 # Print to file if required
                 if print_to_file:
-                    file_printer.writ(data)
+                    save_to_file.writ(data)
 
                 # Sends a copy of the data recieved back to client to confirm its receipt
                 if type(data) is str:
