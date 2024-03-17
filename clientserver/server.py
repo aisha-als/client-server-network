@@ -8,98 +8,88 @@ HOST = 'localhost'
 PORT = 6666
 
 def is_encrypted(data):
-    # Simple heuristic to check if data might be encrypted
-    # This should be replaced with a more robust method depending on the encryption detection logic
     return data.startswith(b'gAAAAAB')
 
-def receive_data():
-    """
-    Receives data sent from the client.
-    
-    """
-    # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-
+def get_user_decision(prompt, valid_responses):
+    while True:
         try:
-            # Binds server_socket to the host and port defined above
-            server_socket.bind((HOST, PORT))
+            user_input = input(prompt).strip().lower()
+            if user_input in valid_responses:
+                return user_input
+            else:
+                print(f"Invalid input. Please enter {' or '.join(valid_responses)}.")
+        except Exception as e:
+            print(f"An error occurred while getting user decision: {e}")
 
-            # Starts listening for incoming connections
+def handle_encryption(data):
+    decrypt_choice = get_user_decision("Do you want to decrypt the data? (Y/N): ", ['y', 'n'])
+    if decrypt_choice == 'y':
+        return encryption.symmetric_decryption(data), True
+    return data, False
+
+def handle_data_output(data):
+    output_choice = get_user_decision("Do you want to print the received data on screen or save it to a file? (Print/Save): ", ['print', 'save'])
+    if output_choice == 'print':
+        print(f"\nData received: {data}")
+    elif output_choice == 'save':
+        filename = save_to_file.writ(data)
+        print(f"Data has been saved to {filename}. Please check the file.")
+
+def receive_data():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+        try:
+            server_socket.bind((HOST, PORT))
             server_socket.listen()
             print("\n*** Initiating Server ***")
             print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
-            
-            # Accepts incoming connections
-            connection, address = server_socket.accept()
-        except socket.error as se:
-            print(f"A socket error has occured: {se}")
-            return 1
-        except Exception as e:
-            print(f"An error has occured in the receive_data function: {e}")
-            return 1
+        except socket.error as e:
+            print(f"Failed to bind or listen on {HOST}:{PORT}: {e}")
+            return
 
         while True:
-            with connection:
-                print(f"Server connected to {address}")
+            try:
+                connection, address = server_socket.accept()
+                print(f"\nServer connected to {address}")
+            except socket.error as e:
+                print(f"A socket error occurred during connection acceptance: {e}")
+                continue
 
-                # Receives data from client side - 1024 represents max number of bytes that can be recieved at once
+            try:
                 data = connection.recv(1024)
-            
-                # Notify user of received data and check if it's encrypted
-                encrypted = is_encrypted(data)
-                print(f"\n*** Data received. {'Data appears to be encrypted.' if encrypted else 'Data does not appear to be encrypted.'} ***\n")
+                if not data:
+                    print("No data received. Closing connection.")
+                    connection.close()
+                    continue
+            except socket.error as e:
+                print(f"Error receiving data: {e}")
+                connection.close()
+                continue
 
-                # If data received is encrypted, ask the user if they want to decrypt it
-                if encrypted:
-                    while True:
-                        decrypt_choice = input("Do you want to decrypt the data? (Y/N): ")
-                        if decrypt_choice.strip().lower() == 'y':
-                            data = encryption.symmetric_decryption(data)
-                            print("\n*** Data has been decrypted. ***\n")
-                            break
-                        elif decrypt_choice.strip().lower() == 'n':
-                            print("\n*** Data will remain encrypted. ***\n")
-                            break
-                        else:
-                            print("Invalid input. Please enter 'Y' for yes or 'N' for no.")
+            process_connection(data, connection, address)
 
-                # Ask the user whether they want to print the received data on screen or save to file
-                while True:
-                    output_choice = input("Do you want to print the received data on screen or save it to a file? (Print/Save): ")
-                    if output_choice.strip().lower() == 'print':
-                        print(f"\nData received: {data}")
-                        # Delete output.txt if exists
-                        if os.path.exists("output.txt"):
-                            os.remove("output.txt")
-                            break
-                        else: break
-                    elif output_choice.strip().lower() == 'save':
-                        filename=save_to_file.writ(data)
-                        print("Data has been saved to ",filename,". Please check the file.")
-                        break
-                    else:
-                        print("Invalid input. Please enter 'Print' or 'Save'.")
+def process_connection(data, connection, address):
+    encrypted = is_encrypted(data)
+    print(f"\n*** Data received. {'Data appears to be encrypted.' if encrypted else 'Data does not appear to be encrypted.'} ***")
 
-                # Check if data is a string and encode it if so
-                if isinstance(data, str):
-                    data = data.encode('utf-8')
+    if encrypted:
+        data, decrypted = handle_encryption(data)
+        if decrypted:
+            print("\n*** Data has been decrypted. ***\n")
+        else:
+            print("\n*** Data will remain encrypted. ***\n")
 
-                # Sends a copy of the data received back to the client to confirm its receipt
-                connection.sendall(data)
+    handle_data_output(data)
 
-            # After processing a connection, ask if the server should continue running
-            while True:
-                user_input = input("\n Do you want to keep the server running? (Y/N): ")
-                if user_input.strip().lower() == 'y':
-                    print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
-                    # Accepts incoming connections
-                    connection, address = server_socket.accept()
-                    break  # Continue the outer while loop
-                elif user_input.strip().lower() == 'n':
-                    print("\n*** Server stopped ***\n")
-                    return  # Exit the function, effectively stopping the server
-                else:
-                    print("Invalid input. Please enter 'Y' for yes or 'N' for no.")
+    if isinstance(data, str):
+        data = data.encode('utf-8')
+    connection.sendall(data)
+
+    if get_user_decision("\nDo you want to keep the server running? (Y/N): ", ['y', 'n']) == 'n':
+        print("\n*** Server stopped ***\n")
+        connection.close()
+        exit()
+    else:
+        print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
 
 if __name__ == '__main__':
     receive_data()

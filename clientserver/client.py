@@ -7,13 +7,53 @@ import encryption
 HOST = 'localhost'
 PORT = 6666
 
+def get_data_type_selection():
+    """
+    Prompts the user to select a data type to send.
+    Returns:
+        format (str): The selected data format.
+    """
+    data_type_selection = {
+        '1': 'json',
+        '2': 'xml',
+        '3': 'binary',
+        '4': 'txt',
+    }
+    prompt = "\n".join([
+        "What data type do you want to send?",
+        "Enter 1 for JSON",
+        "Enter 2 for XML",
+        "Enter 3 for Binary",
+        "Enter 4 for TXT",
+        "Your choice: "
+    ])
+
+    while True:
+        data_type_input = input(prompt)
+        if data_type_input in data_type_selection:
+            return data_type_selection[data_type_input]
+        else:
+            print("ERROR: Wrong option selected")
+
+def get_encryption_preference():
+    """
+    Prompts the user to select whether to encrypt the data.
+    Returns:
+        encrypt (bool): True if the user wants to encrypt the data, False otherwise.
+    """
+    while True:
+        encrypt_input = input("Do you want to encrypt the data? (Enter Y/N): ")
+        if encrypt_input.strip().lower() in ('y', 'n'):
+            return encrypt_input.strip().lower() == 'y'
+        else:
+            print("ERROR: Wrong option selected")
 
 def data_types(dictionary, format):
     """
-    Takes a dictonary and converts to chosen format.
-    Arguments"
-    dictonary - The raw data in a dictionary to format
-    format - The chosen format to convert the dictonary to
+    Takes a dictionary and converts it to chosen format.
+    Arguments:
+    dictionary - The raw data in a dictionary to format
+    format - The chosen format to convert the dictionary to
     """
     try:
         if format == 'json':
@@ -28,9 +68,8 @@ def data_types(dictionary, format):
             raise ValueError("Invalid format specified")
         return data
     except Exception as e:
-        print(f"An error in data_types function has occured: {e}")
+        print(f"An error in data_types function has occurred: {e}")
         return None
-
 
 def send_data(format, encrypt=False):
     """
@@ -40,89 +79,41 @@ def send_data(format, encrypt=False):
     encrypt - Whether or not to encrypt the file, default = false.
     """
     try:
-        # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-
-            # Connects client to server
             client_socket.connect((HOST, PORT))
-
-            # Calling the data_types function in this script to choose the data type
             data_sent = data_types(student_names, format)
             if data_sent is None:
                 return 1
 
-            # If encryption is required
             if encrypt:
                 data_sent = data_sent.decode()
                 data_sent = encryption.symmetric_encryption(data_sent)
 
-            # Sends data to server
             client_socket.sendall(data_sent)
-
-            # Inform the user that the data has been sent and waiting for server response
             print("\nFollowing data has been sent to the server.\n")
             print(data_sent)
             print("\nStatus: Waiting for server response...")
 
-            # Copy of data that server recieved
             data = client_socket.recv(1024)
+            print(f"\nServer has received data.\nCopy of data received: {data}")
 
-        # Decodes data by converting bytes to string then printing
-        if format == 'binary':
-            print(f"\nServer has recieved data.\nCopy of data recieved: {data}")
-        else:
-            print(f"\nServer has recieved data.\nCopy of data recieved: {data.decode()}")
-        
-        # Program successful, return 0
-        return 0
-        
+            return 0
     except ConnectionRefusedError as cre:
-        print(f"A connection error has occured: {cre}. Please check that the server is running.")
+        print(f"A connection error has occurred: {cre}. Please check that the server is running.")
         return 1
     except socket.error as se:
-        print(f"A socket error has occured: {se}")
+        print(f"A socket error has occurred: {se}")
         return 1
     except Exception as e:
-        print(f"An error in send_data function has occured: {e}")
+        print(f"An error in send_data function has occurred: {e}")
         return 1
 
-
 if __name__ == '__main__':
-    # Data type selection
-    data_type_selection = {
-        '1': 'json',
-        '2': 'xml',
-        '3': 'binary',
-        '4': 'txt',
-    }
-
-    while True:
-        data_type_input = input("What data type do you want to send?\n"
-                                "Enter 1 for JSON\n"
-                                "Enter 2 for XML\n"
-                                "Enter 3 for Binary\n"
-                                "Enter 4 for TXT\n"
-                                "Your choice: ")
-        if data_type_input in data_type_selection:
-            format = data_type_selection[data_type_input]
-            break
-        else:
-            print("ERROR: Wrong option selected")
-
-    # Initialize encryption preference to False
+    format = get_data_type_selection()
     encrypt = False
-
-    # Encryption preference - only if TXT is selected
     if format == 'txt':
-        while True:
-            encrypt_input = input("Do you want to encrypt the data? (Enter Y/N): ")
-            if encrypt_input.strip().lower() in ('y', 'n'):
-                encrypt = True if encrypt_input.strip().lower() == 'y' else False
-                break
-            else:
-                print("ERROR: Wrong option selected")
+        encrypt = get_encryption_preference()
 
-    # Call the main function with the user inputs
     err = send_data(format, encrypt)
     if err != 0:
         print('Program halted because of an error')
