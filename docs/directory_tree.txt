@@ -1,0 +1,23 @@
+.
+└── client-server-network/
+    ├── clientserver/
+    │   ├── __init__.py
+    │   ├── client.py
+    │   ├── data_formats.py
+    │   ├── encryption.py
+    │   ├── save_to_file.py
+    │   ├── server.py
+    │   └── text_data.txt
+    ├── docs/
+    │   └── directory_tree.txt
+    ├── tests/
+    │   ├── __init__.py
+    │   ├── test_dictionaries.py
+    │   ├── test_encryption.py
+    │   ├── test_file_handling.py
+    │   └── test_server.py
+    ├── .gitignore
+    ├── LICENSE
+    ├── README.md
+    ├── requirements.txt
+    └── setup.py
