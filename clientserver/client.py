@@ -11,7 +11,7 @@ PORT = 6666
 def data_types(dictionary, format):
     try:
         if format == 'json':
-            data = data_formats.dict_to_json(student_names).encode()
+            data = data_formats.dict_to_json(dictionary).encode()
         elif format == 'xml':
             data = data_formats.dict_to_xml(dictionary)
         elif format == 'binary':
@@ -73,11 +73,11 @@ def send_data(format, encrypt=False):
 if __name__ == '__main__':
     # Select which data type to be sent to the server
     # Options: json, xml, binary, txt
-    format = 'json'
+    format = 'txt'
 
     # Select if the data is to be encrypted
     # Options: True, False
-    encrypt = False
+    encrypt = True
 
     # Call the main script
     err = send_data(format, encrypt)

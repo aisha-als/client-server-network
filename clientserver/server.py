@@ -33,7 +33,7 @@ def receive_data(print_to_file=False):
                 if not data:
                     break
 
-                # Decrypt if decryption is required
+                # Run decryption which will check if the text is encrypted or not and if so, decrypt it
                 data = encryption.symmetric_decryption(data)
 
                 # Decodes data by converting bytes to string then printing
