@@ -1,3 +1,8 @@
+""" Server
+
+This script uses the socket library to listen to incoming connection to the loopback address.
+"""
+
 import socket
 import encryption
 import save_to_file
@@ -8,8 +13,7 @@ PORT = 6666
 
 
 def receive_data(print_to_file=False):
-    """
-    Receives data sent from the client.
+    """Receives data sent from the client.
 
     Arguments:
     print_to_file - Whether to output data to a file or not. Default = false.

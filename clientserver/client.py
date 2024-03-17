@@ -1,3 +1,8 @@
+""" Client
+
+This script uses the socket library to send data to a server and listen to incoming messages on the loopback address.
+"""
+
 import socket
 import data_formats
 from data_formats import student_names
@@ -9,8 +14,7 @@ PORT = 6666
 
 
 def data_types(dictionary, format):
-    """
-    Takes a dictonary and converts to chosen format.
+    """Takes a dictonary and converts to chosen format.
 
     Arguments:
     dictionary - The raw data in a dictionary format
@@ -34,8 +38,7 @@ def data_types(dictionary, format):
 
 
 def send_data(format, encrypt=False):
-    """
-    Connects to server and sends data.
+    """Connects to server and sends data.
 
     Arguments:
     format - The chosen format the dictionary was converted to.

@@ -1,9 +1,10 @@
-import sys
+""" Save to File
 
-""" This program redirects the print() to the file by routing the standard output sys.stdout
+This script redirects the print() to the file by routing the standard output sys.stdout
 to point to the destination file instead.
-It saves the current stdout so that we can revert sys.stdou after we complete
-our redirection. """
+"""
+
+import sys
 
 sample_input = ['Hi', 'all', 'exit']
 
