@@ -13,7 +13,7 @@ def writ(input_data):
             file.write(input_data)
         else:
             # If input_data is not bytes, join list into a single string and encode to bytes
-            file.write(bytes('\n'.join(input_data), encoding='utf-8'))
+            file.write(bytes(''.join(input_data), encoding='utf-8'))
 
     # Restore sys.stdout to our old saved file handler
     sys.stdout = stdout_fileno
