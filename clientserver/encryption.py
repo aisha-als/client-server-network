@@ -8,6 +8,7 @@ from cryptography.fernet import Fernet
 
 # Use Fernet to generate an encryption key
 key = Fernet.generate_key()
+
 # Write the key to a local key.key file
 with open("key.key", "wb") as fernet:
     fernet.write(key)
@@ -15,9 +16,16 @@ with open("key.key", "wb") as fernet:
 
 def open_file():
     # Open the .txt file
-    with open("text_data.txt", "r") as f:
-        txt = f.read()
-        return txt
+    try:
+        with open("text_data.txt", "r") as f:
+            txt = f.read()
+            return txt
+    except FileNotFoundError as fnfe:
+        print(f"An error occured in the open_file function. The file could not be found: {fnfe}")
+        return 1
+    except Exception as e:
+        print(f"An error occured in the open_file function: {e}")
+        return 1
 
 
 def symmetric_encryption(file):
@@ -27,10 +35,18 @@ def symmetric_encryption(file):
     file - file / data to be encrypted.
     """
     # Load the generated key
-    key = open("key.key", "rb").read()
-    fernet = Fernet(key)
-    # Encrypt the .txt file using the generated key
-    encrypted_txt = fernet.encrypt(file.encode())
+    try:
+        key = open("key.key", "rb").read()
+    except FileNotFoundError as fnfe:
+        print(f"An error occured in the symmetric_encryption function. The file could not be found: {fnfe}")
+        return 1
+    try:
+        fernet = Fernet(key)
+        # Encrypt the .txt file using the generated key
+        encrypted_txt = fernet.encrypt(file.encode())
+    except Exception as e:
+        print(f"An error occured in the symmetric_encryption function. File could not be encyrpted: {e}")
+        return 1
 
     # Print statements to view the unencrypted and encrypted versions
     print("Unencrypted file: ", file)
@@ -47,7 +63,12 @@ def symmetric_decryption(file):
     file - file / data to be decrypted.
     """
     # Load the generated key
-    key = open("key.key", "rb").read()
+    try:
+        key = open("key.key", "rb").read()
+    except FileNotFoundError as fnfe:
+        print(f"An error occured in the symmetric_decyrption function. The file could not be found: {fnfe}")
+        return 1
+
     fernet = Fernet(key)
 
     # try statement to check if the text is encrypted

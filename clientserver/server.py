@@ -13,22 +13,31 @@ def is_encrypted(data):
     return data.startswith(b'gAAAAAB')
 
 def receive_data():
+    """
+    Receives data sent from the client.
+    
+    """
     # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
 
-        # Binds server_socket to the host and port defined above
-        server_socket.bind((HOST, PORT))
-
-        # Starts listening for incoming connections
-        server_socket.listen()
-        print("\n*** Initiating Server ***")
-
         while True:
-            print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
+            try:
+                # Binds server_socket to the host and port defined above
+                server_socket.bind((HOST, PORT))
 
-        
-            # Accepts incoming connections
-            connection, address = server_socket.accept()
+                # Starts listening for incoming connections
+                server_socket.listen()
+                print("\n*** Initiating Server ***")
+                print(f"\nServer is listening for connections to {HOST}:{PORT}\n")
+            
+                # Accepts incoming connections
+                connection, address = server_socket.accept()
+            except socket.error as se:
+                print(f"A socket error has occured: {se}")
+                return 1
+            except Exception as e:
+                print(f"An error has occured in the receive_data function: {e}")
+                return 1
 
             with connection:
                 print(f"Server connected to {address}")
@@ -71,8 +80,11 @@ def receive_data():
                     else:
                         print("Invalid input. Please enter 'Print' or 'Save'.")
 
+                # Check if data is a string and encode it if so
+                if isinstance(data, str):
+                    data = data.encode('utf-8')
+
                 # Sends a copy of the data received back to the client to confirm its receipt
-                # connection.sendall(b"Data received successfully.")
                 connection.sendall(data)
 
             # After processing a connection, ask if the server should continue running

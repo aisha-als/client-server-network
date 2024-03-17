@@ -9,6 +9,12 @@ PORT = 6666
 
 
 def data_types(dictionary, format):
+    """
+    Takes a dictonary and converts to chosen format.
+    Arguments"
+    dictonary - The raw data in a dictionary to format
+    format - The chosen format to convert the dictonary to
+    """
     try:
         if format == 'json':
             data = data_formats.dict_to_json(dictionary).encode()
@@ -27,6 +33,12 @@ def data_types(dictionary, format):
 
 
 def send_data(format, encrypt=False):
+    """
+    Connects to server and sends data.
+    Arguments:
+    format - The chosen format the dictionary was converted to.
+    encrypt - Whether or not to encrypt the file, default = false.
+    """
     try:
         # Creates a socket object - AF_INET specifies IPv4 - SOCK_STREAM specifies TCP socket type
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
