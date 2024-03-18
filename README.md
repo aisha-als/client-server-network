@@ -32,11 +32,13 @@ You can use this package to create a client / server network.
 
 To start the server, run:
 ```sh
+cd clientserver
 python clientserver/server.py
 ```
 
 To start the client, run:
 ```sh
+cd clientserver
 python clientserver/client.py
 ```
 
