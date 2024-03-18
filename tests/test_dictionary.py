@@ -3,7 +3,7 @@ import json
 import xmltodict  # pip install xmltodict - need for test
 import pickle
 
-from data_formats import dict_to_json, dict_to_xml, dict_to_binary
+from clientserver.data_formats import dict_to_json, dict_to_xml, dict_to_binary
 
 
 # --- Sample Test Data ---
