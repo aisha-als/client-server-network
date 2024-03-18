@@ -1,5 +1,5 @@
 import pytest
-from encryption import open_file, symmetric_encryption  
+from clientserver.encryption import open_file, symmetric_encryption  
 
 # Fixtures 
 @pytest.fixture
