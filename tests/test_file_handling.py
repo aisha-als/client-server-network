@@ -13,12 +13,15 @@ def text_file_path():
 # Tests
 def test_open_file(text_file_path, sample_file_content):
     # 1. Creates the "text_data.txt" file with the sample content
+    with open(text_file_path, "w") as f:  
+        f.write(sample_file_content)
 
-    file_content = open_file(text_file_path) 
+    # 2. Read the file content 
+    file_content = open_file()  
     assert file_content == sample_file_content
 
 def test_encryption(sample_file_content):
     encrypted_content = symmetric_encryption(sample_file_content)
 
     # Assert that the content is encrypted 
-    assert encrypted_content != sample_file_content  # Very basic check 
+    assert encrypted_content != sample_file_content  
