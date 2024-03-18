@@ -5,10 +5,8 @@ import pickle
 
 from clientserver.data_formats import dict_to_json, dict_to_xml, dict_to_binary
 
-
 # --- Sample Test Data ---
 simple_dict = {"name": "Edward", "city": "Liverpool"}
-
 
 # --- JSON Tests ---
 def test_dict_to_json_valid():
@@ -20,7 +18,6 @@ def test_dict_to_json_valid():
         assert isinstance(json_object, dict)  # Should be a dictionary
     except json.JSONDecodeError:
         pytest.fail("Generated output is not valid JSON") 
-
 
 def test_dict_to_json_content():
     json_data = dict_to_json(simple_dict)
@@ -43,9 +40,12 @@ def test_dict_to_xml_content():
     xml_data = dict_to_xml(simple_dict)
     xml_dict = xmltodict.parse(xml_data)
 
-    # Assumming typical XML structure 
-    assert xml_dict['root']['name'] == "Edward"
-    assert xml_dict['root']['city'] == "Liverpool"
+    # Find the root element dynamically
+    root_element = list(xml_dict.keys())[0] 
+
+    # Modified assertions to match the XML structure
+    assert xml_dict[root_element]['name']['#text'] == "Edward"  
+    assert xml_dict[root_element]['city']['#text'] == "Liverpool" 
 
 # --- Binary Tests ---
 def test_dict_to_binary():
