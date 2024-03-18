@@ -1,6 +1,6 @@
 import pytest
 from cryptography.fernet import Fernet
-from encryption import symmetric_encryption
+from clientserver.encryption import symmetric_encryption
 
 # Test Data
 original_message = "This is a secret message."
