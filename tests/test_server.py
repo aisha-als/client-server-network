@@ -1,7 +1,7 @@
 import pytest
 from unittest import mock
 import socket
-from server import *  # Import the server logic
+from clientserver.server import *  # Import the server logic
 
 @mock.patch('socket.socket')
 def test_receive_and_respond(mock_socket):
