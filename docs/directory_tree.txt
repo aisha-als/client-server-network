@@ -14,8 +14,7 @@
     │   ├── __init__.py
     │   ├── test_dictionaries.py
     │   ├── test_encryption.py
-    │   ├── test_file_handling.py
-    │   └── test_server.py
+    │   └── test_file_handling.py
     ├── .gitignore
     ├── LICENSE
     ├── README.md
