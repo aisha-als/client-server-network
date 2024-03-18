@@ -77,6 +77,12 @@ if __name__ == '__main__':
 
 ### Unit Tests
 
+Unit tests are run using `pytest`.
+
+To run the unit tests, run the below command:
+```sh
+pytest
+```
 
 ## Contributing
 
